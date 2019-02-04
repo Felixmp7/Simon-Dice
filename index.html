@@ -94,8 +94,25 @@
       <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
     </div>
     <script>
+
+    	const celeste = document.querySelector('#celeste')
+    	const violeta = document.querySelector('#violeta')
+    	const naranja = document.querySelector('#naranja')
+    	const verde = document.querySelector('#verde')
+    	const btnEmpezar = document.querySelector('#btnEmpezar')
+
+    	class Juego {
+    		constructor(){
+    			this.inicializar()
+    		}
+
+    		inicializar(){
+    			btnEmpezar.classList.add('hide')
+    		}
+    	}
+
     	function empezarJuego(){
-    		alert('Empezamos el Juego')
+    		let juego = new Juego
     	}
     </script>
   </body>
