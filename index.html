@@ -109,8 +109,9 @@
     		}
 
     		inicializar(){
-    			btnEmpezar.classList.add('hide')
-    			this.nivel = 7
+          this.elegirColor = this.elegirColor.bind(this) // Con ésta sentencia, ato de una vez al ejecutar
+    			btnEmpezar.classList.add('hide')  // elegirColor el this con el juego.
+    			this.nivel = 1
     			this.colores = {
     				celeste,
     				violeta,
@@ -124,6 +125,7 @@
 
     		siguienteNivel(){
     			this.iluminarSecuencia()
+    			this.agregarEventosClick()
     		}
 
     		transformarNumeroAColor(numero){
@@ -151,6 +153,18 @@
     				setTimeout(() => this.iluminarColor(color), 1000 * i)
     			}
     		}
+
+    		agregarEventosClick(){
+          console.log(this) // El this acá, sigue siendo el juego como tal
+    			this.colores.celeste.addEventListener('click', this.elegirColor)
+          this.colores.violeta.addEventListener('click', this.elegirColor)
+          this.colores.naranja.addEventListener('click', this.elegirColor)
+          this.colores.verde.addEventListener('click', this.elegirColor)
+    		}
+
+        elegirColor(ev){
+          console.log(this) // Acá el this cambia, acá el this va a ser el boton que seleccionemos en ese momento.
+        }
     	}
 
     	function empezarJuego(){
