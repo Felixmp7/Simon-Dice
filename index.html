@@ -100,15 +100,17 @@
     	const naranja = document.querySelector('#naranja')
     	const verde = document.querySelector('#verde')
     	const btnEmpezar = document.querySelector('#btnEmpezar')
+      const ULTIMO_NIVEL = 10
 
     	class Juego {
     		constructor(){
     			this.inicializar()
     			this.generarSecuencia()
-    			this.siguienteNivel()
+    			setTimeout(this.siguienteNivel, 700)
     		}
 
     		inicializar(){
+          this.siguienteNivel = this.siguienteNivel.bind(this)
           this.elegirColor = this.elegirColor.bind(this) // Con ésta sentencia, ato de una vez al ejecutar
     			btnEmpezar.classList.add('hide')  // elegirColor el this con el juego.
     			this.nivel = 1
@@ -124,6 +126,7 @@
     		}
 
     		siguienteNivel(){
+          this.subnivel = 0
     			this.iluminarSecuencia()
     			this.agregarEventosClick()
     		}
@@ -136,6 +139,15 @@
     				case 3 : return 'verde'
     			}
     		}
+
+        transformarColorANumero(color){
+          switch(color){
+            case 'celeste': return 0
+            case 'violeta': return 1
+            case 'naranja': return 2
+            case 'verde': return 3
+          }
+        }
 
     		iluminarColor(color){
     			this.colores[color].classList.add('light')
@@ -155,15 +167,38 @@
     		}
 
     		agregarEventosClick(){
-          console.log(this) // El this acá, sigue siendo el juego como tal
+          //console.log(this) // El this acá, sigue siendo el juego como tal
     			this.colores.celeste.addEventListener('click', this.elegirColor)
           this.colores.violeta.addEventListener('click', this.elegirColor)
           this.colores.naranja.addEventListener('click', this.elegirColor)
           this.colores.verde.addEventListener('click', this.elegirColor)
     		}
 
-        elegirColor(ev){
-          console.log(this) // Acá el this cambia, acá el this va a ser el boton que seleccionemos en ese momento.
+        eliminarEventosClick(){
+          this.colores.celeste.removeEventListener('click', this.elegirColor)
+          this.colores.violeta.removeEventListener('click', this.elegirColor)
+          this.colores.naranja.removeEventListener('click', this.elegirColor)
+          this.colores.verde.removeEventListener('click', this.elegirColor)
+        }
+
+        elegirColor(click){
+          //console.log(click) // Acá el this cambia, acá el this va a ser el boton que seleccionemos en ese momento.
+          const nombreColor = click.target.dataset.color
+          //console.log(nombreColor)
+          this.iluminarColor(nombreColor)
+          const numeroColor = this.transformarColorANumero(nombreColor)
+          if( numeroColor === this.secuencia[this.subnivel]){
+            this.subnivel++
+            if( this.subnivel === this.nivel ){
+              this.nivel++
+              this.eliminarEventosClick()
+              if(this.nivel === (ULTIMO_NIVEL + 1)){
+                // Ganó!
+              } else {
+                setTimeout(this.siguienteNivel,1400)
+              }
+            }
+          }
         }
     	}
 
