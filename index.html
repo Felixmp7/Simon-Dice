@@ -93,6 +93,8 @@
       <div id="verde" class="color verde right" data-color="verde"></div>
       <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
     </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
 
     	const celeste = document.querySelector('#celeste')
@@ -104,6 +106,7 @@
 
     	class Juego {
     		constructor(){
+          this.inicializar = this.inicializar.bind(this)
     			this.inicializar()
     			this.generarSecuencia()
     			setTimeout(this.siguienteNivel, 700)
@@ -112,7 +115,7 @@
     		inicializar(){
           this.siguienteNivel = this.siguienteNivel.bind(this)
           this.elegirColor = this.elegirColor.bind(this) // Con ésta sentencia, ato de una vez al ejecutar
-    			btnEmpezar.classList.add('hide')  // elegirColor el this con el juego.
+    			this.toggleBotonEmpezar()  // elegirColor el this con el juego.
     			this.nivel = 1
     			this.colores = {
     				celeste,
@@ -121,6 +124,14 @@
     				verde
     			}
     		}
+
+        toggleBotonEmpezar(){
+          if (btnEmpezar.classList.contains('hide')) {
+            btnEmpezar.classList.remove('hide')
+          } else {
+            btnEmpezar.classList.add('hide')
+          }
+        }
     		generarSecuencia(){
     			this.secuencia = new Array(10).fill(0).map(n => Math.floor(Math.random() * 4))
     		}
@@ -193,12 +204,27 @@
               this.nivel++
               this.eliminarEventosClick()
               if(this.nivel === (ULTIMO_NIVEL + 1)){
-                // Ganó!
+                this.ganoElJuego()
               } else {
                 setTimeout(this.siguienteNivel,1400)
               }
             }
+          } else {
+            this.perdioElJuego()
           }
+        }
+
+        ganoElJuego(){
+          swal('Platzi', 'Haz Ganado!', 'success')
+            .then(this.inicializar)
+        }
+
+        perdioElJuego(){
+          swal('Platzi', 'Haz Perdido!', 'error')
+            .then(() => {
+              this.eliminarEventosClick()
+              this.inicializar()
+            })
         }
     	}
 
